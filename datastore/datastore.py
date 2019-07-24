@@ -19,6 +19,9 @@ app.config.update(dict(
 
 
 def perform_action_thread_safe(func, *args):
+    """
+    Run a function on a file in a thread safe manner using the given arguments
+    """
     app.config.update(dict(
         filelock=True
     ))
@@ -30,6 +33,9 @@ def perform_action_thread_safe(func, *args):
 
 @app.route('/create', methods=['GET', 'POST'])
 def create_entry():
+    """
+    Endpoint to add an entry to the data store
+    """
     if request.method == 'GET':
         new_key = request.args.get('key')
         new_value = request.args.get('value')
@@ -73,6 +79,9 @@ def create_entry():
 
 @app.route('/read', methods=['GET', 'POST'])
 def read_entry():
+    """
+    Endpoint to read an entry from the datastore
+    """
     if request.method == 'GET':
         resp = ''
         key = request.args.get('key')
@@ -110,6 +119,9 @@ def read_entry():
                 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete_entry():
+    """
+    Endpoint to delete an entry in the datastore
+    """
     cur_time= time.time()
     if request.method == 'GET':
         resp = ''
