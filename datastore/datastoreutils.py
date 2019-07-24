@@ -13,3 +13,15 @@ def add_entry_to_datastore(new_key, new_value, filename):
     json.dump(old_data, data_file)
     data_file.close()
     return True, 'Entry Created'
+
+def read_entry_from_datastore(key, filename):
+    if not os.path.isfile(filename):
+        print(filename)
+        return False, 'Datastore not Found'
+    data_file = open(filename, 'r')
+    data = json.load(data_file)
+    data_file.close()
+    if key not in data.keys():
+        return False, 'Key not found'
+    else:
+        return True, str(data[key])
