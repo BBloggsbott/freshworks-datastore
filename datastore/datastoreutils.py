@@ -44,6 +44,8 @@ def add_entry_to_datastore(new_key, new_value, filename):
         return False, 'Key exists'
     old_data[new_key] = new_value
     data_file = open(filename, 'w+')
+    if len(json.dumps(old_data).encode('utf-8')) > 2**30:
+        return False, 'File size greater than 1 GB'
     json.dump(old_data, data_file)
     data_file.close()
     return True, 'Entry Created'
