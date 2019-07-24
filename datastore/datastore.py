@@ -15,6 +15,16 @@ app.config.update(dict(
     filelock = False
 ))
 
+def perform_action_thread_safe(func, *args):
+    app.config.update(dict(
+        filelock=True
+    ))
+    success, resp = func(*args)
+    app.config.update(dict(
+        filelock=False
+    ))
+    return success, resp
+
 @app.route('/create', methods=['GET', 'POST'])
 def create_entry():
     if request.method == 'GET':
@@ -30,18 +40,9 @@ def create_entry():
             if app.config['filelock']:
                 time.sleep(random.random())     #To prevent multiple threads from locking file at the same time
             else:
-                app.config.update(dict(
-                    filelock=True
-                ))
-                success, resp = add_entry_to_datastore(new_key, new_value, app.config['savefile'])
+                success, resp = perform_action_thread_safe(add_entry_to_datastore, new_key, new_value, app.config['savefile'])
                 if not success:
-                    app.config.update(dict(
-                        filelock=False
-                    ))
                     return resp, status.HTTP_409_CONFLICT
-                app.config.update(dict(
-                    filelock=False
-                ))
                 break
         return resp, status.HTTP_201_CREATED
     else:
@@ -57,18 +58,9 @@ def read_entry():
             if app.config['filelock']:
                 time.sleep(random.random())
             else:
-                app.config.update(dict(
-                    filelock=True
-                ))
-                success, resp = read_entry_from_datastore(key, app.config['savefile'])
+                success, resp = perform_action_thread_safe(read_entry_from_datastore, key, app.config['savefile'])
                 if not success:
-                    app.config.update(dict(
-                        filelock=False
-                    ))
                     return resp, status.HTTP_404_NOT_FOUND
-                app.config.update(dict(
-                    filelock=False
-                ))
                 break
         return resp, status.HTTP_200_OK
     else:
@@ -83,18 +75,9 @@ def delete_entry():
             if app.config['filelock']:
                 time.sleep(random.random())
             else:
-                app.config.update(dict(
-                    filelock=True
-                ))
                 success, resp = delete_entry_from_datastore(key, app.config['savefile'])
                 if not success:
-                    app.config.update(dict(
-                        filelock=False
-                    ))
                     return resp, status.HTTP_404_NOT_FOUND
-                app.config.update(dict(
-                    filelock=False
-                ))
                 break
         return resp, status.HTTP_200_OK
     else:
