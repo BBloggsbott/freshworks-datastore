@@ -33,6 +33,8 @@ def create_entry():
     if request.method == 'GET':
         new_key = request.args.get('key')
         new_value = request.args.get('value')
+        if len(new_key) > 32 or len(new_value.encode('utf-8'))>2**10:
+            return 'Key too long. Max size: 32', status.HTTP_400_BAD_REQUEST
         time_to_live = request.args.get('timetolive')
         resp = ''
         try:
@@ -74,6 +76,8 @@ def read_entry():
     if request.method == 'GET':
         resp = ''
         key = request.args.get('key')
+        if len(key) > 32:
+            return 'Key too long. Max size: 32', status.HTTP_400_BAD_REQUEST
         cur_time = time.time()
         while True:
             if app.config['filelock']:
@@ -100,7 +104,7 @@ def read_entry():
                 if not success:
                     return resp, status.HTTP_404_NOT_FOUND
                 break
-        return resp, status.HTTP_200_OK
+        return json.dumps(resp), status.HTTP_200_OK
     else:
         return 'Bad request', status.HTTP_400_BAD_REQUEST
                 
@@ -110,6 +114,8 @@ def delete_entry():
     if request.method == 'GET':
         resp = ''
         key = request.args.get('key')
+        if len(key) > 32:
+            return 'Key too long. Max size: 32', status.HTTP_400_BAD_REQUEST
         while True:
             if app.config['filelock']:
                 time.sleep(random.random())

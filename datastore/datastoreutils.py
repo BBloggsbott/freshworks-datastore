@@ -57,7 +57,7 @@ def read_entry_from_datastore(key, filename):
     if key not in data.keys():
         return False, 'Key not found'
     else:
-        return True, str(data[key])
+        return True, data[key]
         
 
 def delete_entry_from_datastore(key, filename, timetolive_filename):
