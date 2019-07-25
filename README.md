@@ -61,3 +61,9 @@ http://localhost:5000/delete?key=<key>
 ```
 
 **When a request is processed, the response is returned with the appropriate status code.**
+
+## Running Tests
+To run tests, run the following command
+```bash
+$ python3 test_datastore.py
+```
