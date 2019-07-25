@@ -44,20 +44,20 @@ $ python3 run.py data data_saves.json
 ### Create data
 Use the below syntax to add data to the datastore
 ```
-http://localhost/create?key=<key>&value=<value>&timetolive=<tiletolive>
+http://localhost:5000/create?key=<key>&value=<value>&timetolive=<tiletolive>
 ```
 *The `timetolive` parameter is optional*
 
 ### Read Data
 Use the below syntax to read data from the datastore
 ```
-http://localhost/read?key=<key>
+http://localhost:5000/read?key=<key>
 ```
 
 ### Delete Data
 Use the below syntax to delete data from the datastore
 ```
-http://localhost/delete?key=<key>
+http://localhost:5000/delete?key=<key>
 ```
 
 **When a request is processed, the response is returned with the appropriate status code.**
